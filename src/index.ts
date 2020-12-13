@@ -5,6 +5,7 @@ import { encode as utfencode } from '@stablelib/utf8';
 import { verify } from '@stablelib/ed25519';
 import { decode as hexdecode } from '@stablelib/hex';
 import { Embed } from 'slash-commands/structures/Embed';
+import { publicKeys } from './public_keys';
 
 // todo: inheritance, not composition
 type InteractionRequest = {
@@ -13,8 +14,11 @@ type InteractionRequest = {
 };
 
 enum InteractionResponseType {
+    // yes I know that this doesn't actually not send anything.
     None = 0,
     SendMessage = 1,
+
+    // yes I know that you can still send a message with just this.
     DisplaySource = 2,
 }
 
@@ -37,13 +41,17 @@ function transformResponse(resp: InteractionResponse): TrueInteractionResponse {
     switch (resp.type) {
         case InteractionResponseType.None:
             actualType = 2;
+            break;
         case InteractionResponseType.SendMessage:
             actualType = 3;
+            break;
         case InteractionResponseType.SendMessage |
             InteractionResponseType.DisplaySource:
             actualType = 4;
+            break;
         case InteractionResponseType.DisplaySource:
             actualType = 5;
+            break;
     }
 
     // @ts-ignore
@@ -58,20 +66,14 @@ const handlers: {
 } = {
     '786838810297630740': async function (req) {
         return {
-            type:
-                InteractionResponseType.DisplaySource |
-                InteractionResponseType.SendMessage,
+            type: InteractionResponseType.SendMessage,
             data: {
-                content:
-                    '<:slash:782701715479724063> Did I just hear someone... OwO???',
+                content: `<:slash:782701715479724063> Did I just hear someone... OwO??? From \`${req.from}\`!`,
                 flags: 64,
             },
         };
     },
 };
-
-// @ts-ignore
-const publicKey: string = PUBLIC_KEY;
 
 async function handleRequest(request: Request): Promise<Response> {
     if (request.method !== 'POST') {
@@ -102,12 +104,20 @@ async function handleRequest(request: Request): Promise<Response> {
     }
 
     const body = await request.clone().text();
+    var correct = false;
+    var from: string = '';
 
-    const correct = verify(
-        hexdecode(publicKey),
-        utfencode(timestamp + body),
-        hexdecode(sig),
-    );
+    for (const keyFrom in publicKeys) {
+        if (
+            verify(
+                hexdecode(publicKeys[keyFrom]),
+                utfencode(timestamp + body),
+                hexdecode(sig),
+            )
+        )
+            correct = true;
+        from = keyFrom;
+    }
 
     if (correct === false) {
         return new Response('Invalid signature', {
@@ -115,7 +125,8 @@ async function handleRequest(request: Request): Promise<Response> {
         });
     }
 
-    // todo: some sort of validation... Maybe. Only Discord can get here, after all.
+    // todo: some sort of validation... maybe. Only trusted people can get
+    // here, after all.
     const req = (await request.json()) as Interaction;
 
     if (req === null) {
@@ -143,7 +154,7 @@ async function handleRequest(request: Request): Promise<Response> {
                 JSON.stringify(
                     transformResponse(
                         await handlers[req.data.id]({
-                            from: 'todo: this',
+                            from: from,
                             interaction: req,
                         }),
                     ),
