@@ -4,12 +4,10 @@ import { InteractionResponse as TrueInteractionResponse } from 'slash-commands/s
 import { encode as utfencode } from '@stablelib/utf8';
 import { verify } from '@stablelib/ed25519';
 import { decode as hexdecode } from '@stablelib/hex';
-import { Embed } from 'slash-commands/structures/Embed';
 import { publicKeys } from './public_keys';
+import { InteractionApplicationCommandCallbackData } from 'slash-commands/structures/InteractionApplicationCommandCallbackData';
 
 type InteractionRequest = { from: string } & Interaction;
-
-type a = InteractionRequest & Interaction;
 
 enum InteractionResponseType {
     // yes I know that this doesn't actually not send anything.
@@ -20,16 +18,9 @@ enum InteractionResponseType {
     DisplaySource = 2,
 }
 
-// fixme: temp solution as I fix types
-type Message = {
-    content: string;
-    embeds?: Embed[];
-    flags?: number;
-};
-
 type InteractionResponse = {
     type: InteractionResponseType;
-    data?: Message;
+    data?: InteractionApplicationCommandCallbackData;
 };
 
 // we do some stuff for library UI. let's undo those
@@ -153,7 +144,7 @@ async function handleRequest(request: Request): Promise<Response> {
                     transformResponse(
                         await handlers[req.data.id]({
                             from: from,
-                            ...req
+                            ...req,
                         }),
                     ),
                 ),
