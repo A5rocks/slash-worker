@@ -13,8 +13,19 @@ Put your slash commands on Cloudflare's Worker service.
 6. Put the URL `wrangler` told you as the `Interactions Endpoint URL` in the
    application portal.
 
-Then, you can run any command (TODO: docs on registering a command) and it
-will work!
+Then, you can run any command
+([see "Registering a command"](#Registering-a-command)) and it will work!
+
+#### Registering a command
+
+You can either use a library for a 1-use script or use a binary, your choice:
+ - Library: try out
+   [`slash-commands`](https://www.npmjs.com/package/slash-commands).
+ - Binary: none yet, try searching GitHub! <https://github.com/NurMarvin> had
+   one in the works, not sure of its status.
+
+Or... You can read the documentation and manually construct a request in
+Insomnia or Postman... This is not recommended, though.
 
 #### This one simple trick may save you 180kb!
 
