@@ -7,11 +7,9 @@ import { decode as hexdecode } from '@stablelib/hex';
 import { Embed } from 'slash-commands/structures/Embed';
 import { publicKeys } from './public_keys';
 
-// todo: inheritance, not composition
-type InteractionRequest = {
-    from: string;
-    interaction: Interaction;
-};
+type InteractionRequest = { from: string } & Interaction;
+
+type a = InteractionRequest & Interaction;
 
 enum InteractionResponseType {
     // yes I know that this doesn't actually not send anything.
@@ -155,7 +153,7 @@ async function handleRequest(request: Request): Promise<Response> {
                     transformResponse(
                         await handlers[req.data.id]({
                             from: from,
-                            interaction: req,
+                            ...req
                         }),
                     ),
                 ),
