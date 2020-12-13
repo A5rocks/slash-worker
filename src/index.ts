@@ -1,24 +1,77 @@
 import { Interaction } from 'slash-commands/structures/Interaction';
 import { InteractionType } from 'slash-commands/structures/InteractionType';
+import { InteractionResponse as TrueInteractionResponse } from 'slash-commands/structures/InteractionResponse';
 import { encode as utfencode } from '@stablelib/utf8';
 import { verify } from '@stablelib/ed25519';
 import { decode as hexdecode } from '@stablelib/hex';
+import { Embed } from 'slash-commands/structures/Embed';
+
+// todo: inheritance, not composition
+type InteractionRequest = {
+    from: string;
+    interaction: Interaction;
+};
+
+enum InteractionResponseType {
+    None = 0,
+    SendMessage = 1,
+    DisplaySource = 2,
+}
+
+// fixme: temp solution as I fix types
+type Message = {
+    content: string;
+    embeds?: Embed[];
+    flags?: number;
+};
+
+type InteractionResponse = {
+    type: InteractionResponseType;
+    data?: Message;
+};
+
+// we do some stuff for library UI. let's undo those
+function transformResponse(resp: InteractionResponse): TrueInteractionResponse {
+    var actualType: number = 2;
+
+    switch (resp.type) {
+        case InteractionResponseType.None:
+            actualType = 2;
+        case InteractionResponseType.SendMessage:
+            actualType = 3;
+        case InteractionResponseType.SendMessage |
+            InteractionResponseType.DisplaySource:
+            actualType = 4;
+        case InteractionResponseType.DisplaySource:
+            actualType = 5;
+    }
+
+    // @ts-ignore
+    return {
+        ...resp,
+        type: actualType,
+    };
+}
+
+const handlers: {
+    [id: string]: (_: InteractionRequest) => Promise<InteractionResponse>;
+} = {
+    '786838810297630740': async function (req) {
+        return {
+            type:
+                InteractionResponseType.DisplaySource |
+                InteractionResponseType.SendMessage,
+            data: {
+                content:
+                    '<:slash:782701715479724063> Did I just hear someone... OwO???',
+                flags: 64,
+            },
+        };
+    },
+};
 
 // @ts-ignore
 const publicKey: string = PUBLIC_KEY;
-
-async function handleOwO(request: any): Promise<Response> {
-    return new Response(
-        JSON.stringify({
-            type: 3,
-            data: {
-                content:
-                    '<:slash:782701715479724063> Did I just hear someone... OwO??? Nice!',
-                flags: 64, // ephemeral
-            },
-        }),
-    );
-}
 
 async function handleRequest(request: Request): Promise<Response> {
     if (request.method !== 'POST') {
@@ -62,8 +115,7 @@ async function handleRequest(request: Request): Promise<Response> {
         });
     }
 
-    // TODO: some sort of validation... Maybe. Only Discord can get here, after all.
-    // See the train wreck of `./parsing.ts`
+    // todo: some sort of validation... Maybe. Only Discord can get here, after all.
     const req = (await request.json()) as Interaction;
 
     if (req === null) {
@@ -86,8 +138,17 @@ async function handleRequest(request: Request): Promise<Response> {
             });
         }
 
-        if (req.data.id === '786838810297630740') {
-            return handleOwO(req);
+        if (req.data.id in handlers) {
+            return new Response(
+                JSON.stringify(
+                    transformResponse(
+                        await handlers[req.data.id]({
+                            from: 'todo: this',
+                            interaction: req,
+                        }),
+                    ),
+                ),
+            );
         } else {
             return new Response(
                 JSON.stringify({
