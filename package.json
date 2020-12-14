@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "Cloudflare Worker for Discord Slash Commands.",
     "scripts": {
-        "build": "webpack",
         "format": "prettier --write '**/*.{ts,js,css,json,md}'",
-        "transpile": "tsc --project ."
+        "publish": "wrangler publish",
+        "watch": "wrangler preview --watch"
     },
     "author": "A5rocks",
     "license": "Apache-2.0",
