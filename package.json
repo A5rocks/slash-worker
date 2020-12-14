@@ -18,10 +18,10 @@
         "@types/node": "^14.14.12",
         "fork-ts-checker-webpack-plugin": "^6.0.6",
         "prettier": "^2.0.5",
-        "slash-commands": "^1.1.0",
+        "slash-commands": "^1.2.0",
         "ts-loader": "^7.0.5",
         "typescript": "^3.9.5",
-        "webpack": "^5.10.1"
+        "webpack": "^4.39.0"
     },
     "dependencies": {
         "@stablelib/ed25519": "^1.0.1",

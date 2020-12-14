@@ -1,26 +1,27 @@
-import { Interaction } from 'slash-commands/structures/Interaction';
-import { InteractionType } from 'slash-commands/structures/InteractionType';
-import { InteractionResponse as TrueInteractionResponse } from 'slash-commands/structures/InteractionResponse';
+import {
+    Interaction,
+    InteractionType,
+    InteractionResponse as TrueInteractionResponse,
+} from 'slash-commands/dist/structures';
+import { publicKeys } from './public_keys';
+
+// tracking:
+// https://community.cloudflare.com/t/webcrypto-support-for-ed25519/228897
+// the ed25519 impl here takes ~40ms, which is over the worker limit... even
+// though cloudflare has not stopped the worker, I don't want to push it.
 import { encode as utfencode } from '@stablelib/utf8';
 import { verify } from '@stablelib/ed25519';
 import { decode as hexdecode } from '@stablelib/hex';
-import { publicKeys } from './public_keys';
-import { InteractionApplicationCommandCallbackData } from 'slash-commands/structures/InteractionApplicationCommandCallbackData';
 
-type InteractionRequest = { from: string } & Interaction;
+// commands:
+// todo: add a thing that makes this easier... I guess.
+import { handleOwO } from './commands';
+import { InteractionResponseType } from './types';
 
-enum InteractionResponseType {
-    // yes I know that this doesn't actually not send anything.
-    None = 0,
-    SendMessage = 1,
-
-    // yes I know that you can still send a message with just this.
-    DisplaySource = 2,
-}
-
-type InteractionResponse = {
-    type: InteractionResponseType;
-    data?: InteractionApplicationCommandCallbackData;
+const handlers: {
+    [id: string]: (_: InteractionRequest) => Promise<InteractionResponse>;
+} = {
+    '786838810297630740': handleOwO,
 };
 
 // we do some stuff for library UI. let's undo those
@@ -49,20 +50,6 @@ function transformResponse(resp: InteractionResponse): TrueInteractionResponse {
         type: actualType,
     };
 }
-
-const handlers: {
-    [id: string]: (_: InteractionRequest) => Promise<InteractionResponse>;
-} = {
-    '786838810297630740': async function (req) {
-        return {
-            type: InteractionResponseType.SendMessage,
-            data: {
-                content: `<:slash:782701715479724063> Did I just hear someone... OwO??? From \`${req.from}\`!`,
-                flags: 64,
-            },
-        };
-    },
-};
 
 async function handleRequest(request: Request): Promise<Response> {
     if (request.method !== 'POST') {
@@ -131,18 +118,12 @@ async function handleRequest(request: Request): Promise<Response> {
             }),
         );
     } else if (req.type === InteractionType.APPLICATION_COMMAND) {
-        // req.data is guaranteed
-        if (!req.data) {
-            return new Response('Invalid payload', {
-                status: 400,
-            });
-        }
-
-        if (req.data.id in handlers) {
+        // req.data is guaranteed.
+        if (req.data!.id in handlers) {
             return new Response(
                 JSON.stringify(
                     transformResponse(
-                        await handlers[req.data.id]({
+                        await handlers[req.data!.id]({
                             from: from,
                             ...req,
                         }),

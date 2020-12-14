@@ -19,10 +19,11 @@ Then, you can run any command
 #### Registering a command
 
 You can either use a library for a 1-use script or use a binary, your choice:
- - Library: try out
-   [`slash-commands`](https://www.npmjs.com/package/slash-commands).
- - Binary: none yet, try searching GitHub! <https://github.com/NurMarvin> had
-   one in the works, not sure of its status.
+
+-   Library: try out
+    [`slash-commands`](https://www.npmjs.com/package/slash-commands).
+-   Binary: none yet, try searching GitHub! <https://github.com/NurMarvin> had
+    one in the works, not sure of its status.
 
 Or... You can read the documentation and manually construct a request in
 Insomnia or Postman... This is not recommended, though.
