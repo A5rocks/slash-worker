@@ -1,6 +1,7 @@
 import {
     Interaction,
     InteractionApplicationCommandCallbackData,
+    User,
 } from 'slash-commands/dist/structures';
 
 export enum InteractionResponseType {
@@ -12,11 +13,55 @@ export enum InteractionResponseType {
     DisplaySource = 2,
 }
 
+// todo: better errors
+export class StringDictionary<V> {
+    private backing: { [id: string]: V } = {};
+
+    public get(k: string): V {
+        if (!(k in this.backing)) {
+            throw new Error(
+                `Cannot get key that does not exist in dictionary: ${k}`,
+            );
+        }
+
+        return this.backing[k];
+    }
+
+    public set(k: string, v: V): V | null {
+        var prev = null;
+        if (k in this.backing) {
+            prev = this.backing[k];
+        }
+
+        this.backing[k] = v;
+
+        return prev;
+    }
+
+    public delete(k: string) {
+        if (!(k in this.backing)) {
+            throw new Error(
+                `Cannot delete key that does not exist in dictionary: ${k}`,
+            );
+        }
+
+        delete this.backing[k];
+    }
+}
+
 declare global {
     type InteractionResponse = {
         type: InteractionResponseType;
         data?: InteractionApplicationCommandCallbackData;
     };
 
-    type InteractionRequest = { from: string } & Interaction;
+    type InteractionRequest = Interaction & {
+        from: string;
+        // fixme: as it is, we pretend subcommands and groups don't exist
+        options: StringDictionary<InteractionOptionData>;
+    };
+
+    // todo: role and channel
+    // todo: migrate this to slash-commands
+    type InteractionOptionData = string | number | boolean | User | object;
 }
