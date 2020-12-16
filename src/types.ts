@@ -58,7 +58,7 @@ declare global {
     type InteractionRequest = Interaction & {
         from: string;
         // fixme: as it is, we pretend subcommands and groups don't exist
-        options: StringDictionary<InteractionOptionData>;
+        options: { [id: string]: InteractionOptionData };
     };
 
     // todo: role and channel

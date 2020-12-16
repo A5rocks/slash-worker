@@ -10,15 +10,19 @@ import { StringDictionary } from '../types';
 // (BrightSkyz)
 function fixArguments(
     options: ApplicationCommandInteractionDataOption[],
-    result: StringDictionary<InteractionOptionData>,
-): StringDictionary<InteractionOptionData> {
+    result: { [id: string]: InteractionOptionData },
+): { [id: string]: InteractionOptionData } {
+    if (options === undefined) {
+        return result;
+    }
+
     for (const option of options) {
         if (!('value' in option)) {
             fixArguments(option.options, result);
             continue;
         }
 
-        result.set(option.name, option.value as InteractionOptionData);
+        result[option.name] = option.value as InteractionOptionData;
     }
 
     return result;
@@ -29,9 +33,7 @@ export function transformRequest(
     interaction: Interaction,
     from: string,
 ): InteractionRequest {
-    const optionsDict = new StringDictionary<
-        ApplicationCommandInteractionDataOption
-    >();
+    const optionsDict: { [id: string]: InteractionOptionData } = {};
     return {
         ...interaction,
         from: from,

@@ -3,9 +3,9 @@
 // Get the key from the "DSN" at: https://sentry.io/settings/<org>/projects/<project>/keys/
 // The "DSN" will be in the form: https://<SENTRY_KEY>@<HOST>/<SENTRY_PROJECT_ID>
 // eg, https://0000aaaa1111bbbb2222cccc3333dddd@sentry.io/123456
-const SENTRY_PROJECT_ID = '123456';
-const SENTRY_KEY = '0000aaaa1111bbbb2222cccc3333dddd';
-const HOST = 'sentry.io';
+const SENTRY_PROJECT_ID = '';
+const SENTRY_KEY = '';
+const HOST = '';
 
 // https://docs.sentry.io/error-reporting/configuration/?platform=javascript#environment
 const ENV = 'production';
@@ -36,6 +36,10 @@ const RETRIES = 3;
 // })
 
 export async function log(err: Error, request: InteractionRequest) {
+    if (SENTRY_PROJECT_ID === '' || SENTRY_KEY === '' || HOST === '') return;
+
+    if (!(err instanceof Error)) return console.error(err);
+
     const body = JSON.stringify(toSentryEvent(err, request));
 
     for (let i = 0; i <= RETRIES; i++) {
