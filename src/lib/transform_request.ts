@@ -1,8 +1,8 @@
 import {
     ApplicationCommandInteractionDataOption,
+    ApplicationCommandOptionValue,
     Interaction,
 } from 'slash-commands/dist/structures';
-import { StringDictionary } from '../types';
 
 // fixme: we ignore subgroups and subcommands
 // maybe a way to solve: (?)
@@ -10,8 +10,8 @@ import { StringDictionary } from '../types';
 // (BrightSkyz)
 function fixArguments(
     options: ApplicationCommandInteractionDataOption[],
-    result: { [id: string]: InteractionOptionData },
-): { [id: string]: InteractionOptionData } {
+    result: { [id: string]: ApplicationCommandOptionValue },
+): { [id: string]: ApplicationCommandOptionValue } {
     if (options === undefined) {
         return result;
     }
@@ -22,7 +22,7 @@ function fixArguments(
             continue;
         }
 
-        result[option.name] = option.value as InteractionOptionData;
+        result[option.name] = option.value;
     }
 
     return result;
@@ -33,12 +33,12 @@ export function transformRequest(
     interaction: Interaction,
     from: string,
 ): InteractionRequest {
-    const optionsDict: { [id: string]: InteractionOptionData } = {};
+    const optionsDict: { [id: string]: ApplicationCommandOptionValue } = {};
     return {
         ...interaction,
         from: from,
         options: fixArguments(
-            interaction.data === undefined ? [] : interaction.data.options,
+            interaction.data === undefined ? [] : interaction.data.options === undefined ? [] : interaction.data.options,
             optionsDict,
         ),
     };

@@ -1,4 +1,5 @@
 import {
+    ApplicationCommandOptionValue,
     Interaction,
     InteractionApplicationCommandCallbackData,
     User,
@@ -58,10 +59,6 @@ declare global {
     type InteractionRequest = Interaction & {
         from: string;
         // fixme: as it is, we pretend subcommands and groups don't exist
-        options: { [id: string]: InteractionOptionData };
+        options: { [id: string]: ApplicationCommandOptionValue };
     };
-
-    // todo: role and channel
-    // todo: migrate this to slash-commands
-    type InteractionOptionData = string | number | boolean | User | object;
 }
