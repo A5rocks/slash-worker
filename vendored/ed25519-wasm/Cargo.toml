@@ -13,3 +13,7 @@ crate-type = ["cdylib"]
 wasm-bindgen = "0.2"
 ed25519-compact = { version = "0.1", default-features = false }
 hex = "0.4.3"
+
+[profile.release]
+lto = true
+opt-level = 's'

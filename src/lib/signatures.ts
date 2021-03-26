@@ -1,7 +1,6 @@
 // tracking:
 // https://community.cloudflare.com/t/webcrypto-support-for-ed25519/228897
-// the ed25519 impl here takes ~40ms, which is over the worker limit... even
-// though cloudflare has not stopped the worker, I don't want to push it.
+// the ed25519 impl here takes ~4ms. Not much, but it can be improved.
 import { check } from './wasm_ed25519';
 
 // WASM_MODULE is provided by wrangler / webpack

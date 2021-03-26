@@ -23,8 +23,3 @@ pub fn check(key: &str, signature: &str, message: &str) -> bool  {
         _ => false
     }
 }
-
-#[wasm_bindgen]
-pub fn greet() -> String {
-    "say hi to the world!".into()
-}
