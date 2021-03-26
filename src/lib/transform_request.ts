@@ -2,7 +2,7 @@ import {
     ApplicationCommandInteractionDataOption,
     ApplicationCommandOptionValue,
     Interaction,
-} from 'slash-commands/dist/structures';
+} from 'slash-commands/dist/src/structures';
 
 // fixme: we ignore subgroups and subcommands
 // maybe a way to solve: (?)
@@ -38,7 +38,11 @@ export function transformRequest(
         ...interaction,
         from: from,
         options: fixArguments(
-            interaction.data === undefined ? [] : interaction.data.options === undefined ? [] : interaction.data.options,
+            interaction.data === undefined
+                ? []
+                : interaction.data.options === undefined
+                ? []
+                : interaction.data.options,
             optionsDict,
         ),
     };

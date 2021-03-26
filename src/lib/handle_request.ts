@@ -1,5 +1,8 @@
 import { verifySig } from './signatures';
-import { Interaction, InteractionType } from 'slash-commands/dist/structures';
+import {
+    Interaction,
+    InteractionType,
+} from 'slash-commands/dist/src/structures';
 import { publicKeys, log } from '..';
 import { handleCommand } from './handle_command';
 import { transformResponse } from './transform_response';

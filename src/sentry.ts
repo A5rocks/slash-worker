@@ -84,8 +84,14 @@ function toSentryEvent(err: Error, request: InteractionRequest) {
             ],
         },
         extra: {
-            guild_id: request.guildId,
-            channel_id: request.channelId,
+            // TODO: this does not seem right: upstream a fix if necessary.
+            //   guild id is also not always provided, but we're fine with `undefined` here :)
+            guild_id:
+                'guild_id' in request ? request.guild_id : request.guildId,
+            channel_id:
+                'channel_id' in request
+                    ? request.channel_id
+                    : request.channelId,
             command_name:
                 request.data === undefined ? undefined : request.data.name,
             options:

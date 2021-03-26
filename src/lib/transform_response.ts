@@ -1,4 +1,4 @@
-import { InteractionResponse as TrueInteractionResponse } from 'slash-commands/dist/structures';
+import { InteractionResponse as TrueInteractionResponse } from 'slash-commands/dist/src/structures';
 import { InteractionResponseType } from '../types';
 
 // we do some stuff for library UI. let's undo those

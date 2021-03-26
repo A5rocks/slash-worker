@@ -3,7 +3,7 @@ import {
     Interaction,
     InteractionApplicationCommandCallbackData,
     User,
-} from 'slash-commands/dist/structures';
+} from 'slash-commands/dist/src/structures';
 
 export enum InteractionResponseType {
     // yes I know that this doesn't actually not send anything.

@@ -1,4 +1,4 @@
-import { InteractionType } from 'slash-commands/dist/structures';
+import { InteractionType } from 'slash-commands/dist/src/structures';
 import { handlers } from '..';
 import { InteractionResponseType } from '../types';
 
@@ -10,7 +10,8 @@ export async function handleCommand(
     interaction: InteractionRequest,
 ): Promise<InteractionResponse> {
     // todo: export ApplicationCommand from slash-worker so I do not lose type info
-    if (interaction.type !== InteractionType.APPLICATION_COMMAND) return neverHappens();
+    if (interaction.type !== InteractionType.APPLICATION_COMMAND)
+        return neverHappens();
 
     const commandId = interaction.data.id;
     if (commandId in handlers) {
