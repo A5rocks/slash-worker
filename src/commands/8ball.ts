@@ -1,9 +1,5 @@
 import { InteractionResponseType } from 'slash-commands/dist/src/structures';
-import {
-    createOriginal,
-    followup,
-    InteractionWithContext,
-} from '../lib/endpoints';
+import { createOriginal, followup } from '.';
 
 export async function handle8Ball(
     interaction: InteractionWithContext,
@@ -17,8 +13,7 @@ export async function handle8Ball(
     await new Promise((resolve) => setTimeout(resolve, 5000));
 
     await createOriginal(interaction, {
-        type:
-            InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
             content: 'I have responded!',
         },

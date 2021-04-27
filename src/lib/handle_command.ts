@@ -1,6 +1,9 @@
-import { InteractionResponseType, InteractionType } from 'slash-commands/dist/src/structures';
+import {
+    InteractionResponseType,
+    InteractionType,
+} from 'slash-commands/dist/src/structures';
 import { handlers } from '..';
-import { createOriginal, InteractionWithContext } from './endpoints';
+import { createOriginal } from './endpoints';
 
 function neverHappens(): never {
     throw new Error('Invalid state, `handle_command.ts`');
@@ -30,7 +33,10 @@ export async function handleCommand(
             setTimeout(() => {
                 if (!context.context.haveResponded) {
                     context.context.haveResponded = true;
-                    resolve({ type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE });
+                    resolve({
+                        type:
+                            InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+                    });
                 }
             }, 2500);
 
@@ -53,8 +59,7 @@ export async function handleCommand(
         return await resp;
     } else {
         return {
-            type:
-                InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
                 content: 'Command not set up in `slash-worker`.',
             },

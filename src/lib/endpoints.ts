@@ -1,15 +1,6 @@
 import { AllowedMentions, Embed } from 'slash-commands/dist/src/structures';
 import { apiPrefix } from '..';
 
-type Context = {
-    originalResp: (_: InteractionResponse) => void;
-    haveResponded: boolean;
-};
-
-export type InteractionWithContext = InteractionRequest & {
-    context: Context;
-};
-
 type _Message = {
     content?: string;
     tts?: boolean;

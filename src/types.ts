@@ -41,18 +41,28 @@ export class StringDictionary<V> {
     }
 }
 
+type Context = {
+    originalResp: (_: InteractionResponse) => void;
+    haveResponded: boolean;
+};
+
 declare global {
-    type InteractionResponse = {
-        type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE;
-        
-    } | {
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE;
-        data?: InteractionApplicationCommandCallbackData;
-    };
+    type InteractionResponse =
+        | {
+              type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE;
+          }
+        | {
+              type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE;
+              data?: InteractionApplicationCommandCallbackData;
+          };
 
     type InteractionRequest = Interaction & {
         from: string;
         // fixme: as it is, this pretends subcommands and groups don't exist
         options: { [id: string]: ApplicationCommandOptionValue };
+    };
+
+    type InteractionWithContext = InteractionRequest & {
+        context: Context;
     };
 }

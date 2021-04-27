@@ -1,9 +1,13 @@
 // todo: should this go into types
-export { InteractionWithContext } from '../lib/endpoints';
+export {
+    createOriginal,
+    followup,
+    editFollowup,
+    deleteFollowup,
+} from '../lib/endpoints';
 
 import { handleOwO } from './owo';
 import { handle8Ball } from './8ball';
-import { InteractionWithContext } from '../lib/endpoints';
 
 type complexCommand = (_: InteractionWithContext) => Promise<void>;
 type simpleCommand = (_: InteractionRequest) => Promise<InteractionResponse>;

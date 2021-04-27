@@ -32,20 +32,10 @@ You can either use a library for a 1-use script or use a binary, your choice:
 Or... You can read the documentation and manually construct a request in
 Insomnia or Postman... This is not recommended, though.
 
-#### This one simple trick may save you 180kb!
-
-I could not figure out how to configure webpack to do this, but if you just
-edit `node_modules/@stablelib/ed25519/lib/ed25519.js` with the following:
-
--   Remove the line that imports `@stablelib/random`
--   Remove the `generateKeyPair` function
-
-Then you can prevent having to polyfill `crypto`, saving 180kb!
-
 #### Handling a command
 
 1. Write a function that takes an `InteractionRequest` and returns a
-   `Promise<InteractionResponse>`.
+   `Promise<InteractionResponse>`. (or uses the endpoints to do equivalent)
 2. Edit `commands/index.ts` to import the function and add it to `handlers`.
 
 And then it should work! Make sure you have the slash command experiment
