@@ -59,7 +59,7 @@ declare global {
     type InteractionRequest = Interaction & {
         from: string;
         // fixme: as it is, this pretends subcommands and groups don't exist
-        options: { [id: string]: ApplicationCommandOptionValue };
+        options: Map<string, ApplicationCommandOptionValue>;
     };
 
     type InteractionWithContext = InteractionRequest & {

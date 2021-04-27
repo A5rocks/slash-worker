@@ -10,8 +10,8 @@ import {
 // (BrightSkyz)
 function fixArguments(
     options: ApplicationCommandInteractionDataOption[],
-    result: { [id: string]: ApplicationCommandOptionValue },
-): { [id: string]: ApplicationCommandOptionValue } {
+    result: Map<string, ApplicationCommandOptionValue>,
+): Map<string, ApplicationCommandOptionValue> {
     if (options === undefined) {
         return result;
     }
@@ -22,7 +22,7 @@ function fixArguments(
             continue;
         }
 
-        result[option.name] = option.value;
+        result.set(option.name, option.value);
     }
 
     return result;
@@ -33,7 +33,7 @@ export function transformRequest(
     interaction: Interaction,
     from: string,
 ): InteractionRequest {
-    const optionsDict: { [id: string]: ApplicationCommandOptionValue } = {};
+    const optionsDict: Map<string, ApplicationCommandOptionValue> = new Map();
     return {
         ...interaction,
         from: from,
