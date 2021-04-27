@@ -5,7 +5,6 @@ import {
 } from 'slash-commands/dist/src/structures';
 import { publicKeys, log } from '..';
 import { handleCommand } from './handle_command';
-import { transformResponse } from './transform_response';
 import { transformRequest } from './transform_request';
 
 const MAX_AGE = 5; // max age of signature in seconds
@@ -58,7 +57,7 @@ export async function handleRequest(evt: FetchEvent): Promise<Response> {
                 transformRequest(req, from),
                 evt,
             );
-            return new Response(JSON.stringify(transformResponse(result)), {
+            return new Response(JSON.stringify(result), {
                 headers: { 'Content-Type': 'application/json' },
             });
         } catch (e) {

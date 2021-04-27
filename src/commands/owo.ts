@@ -1,12 +1,11 @@
-import { InteractionResponseType } from '.';
+import { InteractionResponseType } from "slash-commands/dist/src/structures";
 
 export async function handleOwO(
     req: InteractionRequest,
 ): Promise<InteractionResponse> {
     return {
         type:
-            InteractionResponseType.SendMessage |
-            InteractionResponseType.DisplaySource,
+            InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
             content: `<:slash:782701715479724063> Did I just hear someone... OwO??? From \`${
                 req.from

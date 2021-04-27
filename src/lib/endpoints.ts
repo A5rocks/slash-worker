@@ -35,7 +35,7 @@ export async function createOriginal(
     if (!req.context.haveResponded) {
         req.context.haveResponded = true;
         req.context.originalResp(msg);
-    } else if (msg.data) {
+    } else if ('data' in msg && msg.data) {
         // oh no, accidentally ACK-ed earlier...
         await fetch(
             //@ts-expect-error

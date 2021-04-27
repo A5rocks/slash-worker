@@ -1,6 +1,5 @@
-import { InteractionType } from 'slash-commands/dist/src/structures';
+import { InteractionResponseType, InteractionType } from 'slash-commands/dist/src/structures';
 import { handlers } from '..';
-import { InteractionResponseType } from '../types';
 import { createOriginal, InteractionWithContext } from './endpoints';
 
 function neverHappens(): never {
@@ -31,7 +30,7 @@ export async function handleCommand(
             setTimeout(() => {
                 if (!context.context.haveResponded) {
                     context.context.haveResponded = true;
-                    resolve({ type: InteractionResponseType.DisplaySource });
+                    resolve({ type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE });
                 }
             }, 2500);
 
@@ -55,8 +54,7 @@ export async function handleCommand(
     } else {
         return {
             type:
-                InteractionResponseType.SendMessage |
-                InteractionResponseType.DisplaySource,
+                InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
                 content: 'Command not set up in `slash-worker`.',
             },

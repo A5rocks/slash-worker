@@ -1,4 +1,3 @@
-export { InteractionResponseType } from '../types';
 // todo: should this go into types
 export { InteractionWithContext } from '../lib/endpoints';
 

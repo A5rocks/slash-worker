@@ -2,17 +2,8 @@ import {
     ApplicationCommandOptionValue,
     Interaction,
     InteractionApplicationCommandCallbackData,
-    User,
+    InteractionResponseType,
 } from 'slash-commands/dist/src/structures';
-
-export enum InteractionResponseType {
-    // yes I know that this doesn't actually not send anything.
-    None = 0,
-    SendMessage = 1,
-
-    // yes I know that you can still send a message with just this.
-    DisplaySource = 2,
-}
 
 // todo: better errors
 export class StringDictionary<V> {
@@ -52,13 +43,16 @@ export class StringDictionary<V> {
 
 declare global {
     type InteractionResponse = {
-        type: InteractionResponseType;
+        type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE;
+        
+    } | {
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE;
         data?: InteractionApplicationCommandCallbackData;
     };
 
     type InteractionRequest = Interaction & {
         from: string;
-        // fixme: as it is, we pretend subcommands and groups don't exist
+        // fixme: as it is, this pretends subcommands and groups don't exist
         options: { [id: string]: ApplicationCommandOptionValue };
     };
 }
