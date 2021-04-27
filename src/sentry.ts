@@ -36,6 +36,7 @@ const RETRIES = 3;
 // })
 
 export async function log(err: Error, request: InteractionRequest) {
+    // @ts-ignore
     if (SENTRY_PROJECT_ID === '' || SENTRY_KEY === '' || HOST === '') return;
 
     if (!(err instanceof Error)) return console.error(err);

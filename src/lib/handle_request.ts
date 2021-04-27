@@ -10,7 +10,9 @@ import { transformRequest } from './transform_request';
 
 const MAX_AGE = 5; // max age of signature in seconds
 
-export async function handleRequest(request: Request): Promise<Response> {
+export async function handleRequest(evt: FetchEvent): Promise<Response> {
+    const request = evt.request;
+
     // necessary checks
     if (request.method !== 'POST')
         return new Response('Method Not Allowed.', { status: 405 });
@@ -52,8 +54,13 @@ export async function handleRequest(request: Request): Promise<Response> {
         return new Response(JSON.stringify({ type: 1 }));
     } else if (req.type === InteractionType.APPLICATION_COMMAND) {
         try {
-            const result = await handleCommand(transformRequest(req, from));
-            return new Response(JSON.stringify(transformResponse(result)));
+            const result = await handleCommand(
+                transformRequest(req, from),
+                evt,
+            );
+            return new Response(JSON.stringify(transformResponse(result)), {
+                headers: { 'Content-Type': 'application/json' },
+            });
         } catch (e) {
             log(e, transformRequest(req, from));
 
@@ -64,6 +71,11 @@ export async function handleRequest(request: Request): Promise<Response> {
                         content: 'An error occurred, try again in a while.',
                     },
                 }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                },
             );
         }
     } else {
