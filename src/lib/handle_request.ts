@@ -34,7 +34,7 @@ export async function handleRequest(evt: FetchEvent): Promise<Response> {
     var from = '';
 
     for (const keyFrom in publicKeys) {
-        if (verifySig(publicKeys[keyFrom], timestamp, body, sig)) {
+        if (await verifySig(publicKeys[keyFrom], timestamp, body, sig)) {
             correct = true;
             from = keyFrom;
             break;

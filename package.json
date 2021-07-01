@@ -16,11 +16,11 @@
     "devDependencies": {
         "@cloudflare/workers-types": "^2.0.0",
         "@types/node": "^14.14.12",
-        "copy-webpack-plugin": "^5.1.1",
         "fork-ts-checker-webpack-plugin": "^6.0.6",
         "prettier": "^2.0.5",
         "slash-commands": "^1.4.0",
         "ts-loader": "^7.0.5",
+        "ts-node": "^10.0.0",
         "typescript": "^3.9.5",
         "webpack": "^4.39.0"
     }

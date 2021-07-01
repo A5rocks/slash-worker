@@ -34,8 +34,7 @@ export async function handleCommand(
                 if (!context.context.haveResponded) {
                     context.context.haveResponded = true;
                     resolve({
-                        type:
-                            InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+                        type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
                     });
                 }
             }, 2500);

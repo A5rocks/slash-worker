@@ -22,6 +22,8 @@ export async function handle8Ball(
     await followup(interaction, {
         // TODO: make a specialized option map for every command... maybe?
         // erroring might be enough, to be honest.
-        content: `Your question was \`${interaction.options.get('question')}\`, right?`,
+        content: `Your question was \`${interaction.options.get(
+            'question',
+        )}\`, right?`,
     });
 }

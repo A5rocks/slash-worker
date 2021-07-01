@@ -24,11 +24,6 @@ module.exports = {
         ],
     },
     plugins: [
-        // <something about cloudflare workers not being a browser context>
-        // https://github.com/cloudflare/cobol-worker-template/blob/master/webpack.config.js
-        new CopyPlugin([
-            { from: './vendored/ed25519_wasm_bg.wasm', to: './worker/module.wasm' }
-        ]),
         new ForkTsCheckerWebpackPlugin()
     ],
 };
